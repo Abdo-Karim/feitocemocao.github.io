@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Corrida do Saber</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        #board { display: flex; flex-wrap: wrap; justify-content: center; width: 360px; margin: 20px auto; }
+        .square { width: 30px; height: 30px; margin: 2px; background: lightgray; display: inline-block; }
+        .player1 { background: blue; }
+        .player2 { background: red; }
+        #questionBox { margin-top: 20px; }
+        button { margin: 5px; padding: 10px 20px; }
+    </style>
+</head>
+<body>
+    <h1>Corrida do Saber</h1>
+    <p id="turnInfo">Vez do Jogador 1</p>
+    <button id="rollDice">Jogar dado</button>
+    <p id="diceResult"></p>
+    <div id="board"></div>
+    <div id="questionBox" style="display:none;">
+        <p id="questionText"></p>
+        <div id="answers"></div>
+    </div>
+    <script>
+        const board = document.getElementById("board");
+        const rollBtn = document.getElementById("rollDice");
+        const diceResult = document.getElementById("diceResult");
+        const questionBox = document.getElementById("questionBox");
+        const questionText = document.getElementById("questionText");
+        const answersDiv = document.getElementById("answers");
+        const turnInfo = document.getElementById("turnInfo");
+
+        const totalSquares = 30;
+        let currentPlayer = 1;
+        let positions = {1: 0, 2: 0};
+
+        const questions = [
+            {
+                question: "Quanto é 1 + 1?",
+                answers: ["1", "2", "3", "4"],
+                correct: "2"
+            },
+            {
+                question: "Quanto é 2 + 2?",
+                answers: ["3", "4", "5", "6"],
+                correct: "4"
+            },
+            {
+                question: "Quanto é 3 + 3?",
+                answers: ["5", "6", "7", "8"],
+                correct: "6"
+            },
+            {
+                question: "Quanto é 4 + 4?",
+                answers: ["7", "8", "9", "10"],
+                correct: "8"
+            },
+            {
+                question: "Quanto é 5 + 5?",
+                answers: ["9", "10", "11", "12"],
+                correct: "10"
+            },
+            {
+                question: "Quanto é 6 + 6?",
+                answers: ["11", "12", "13", "14"],
+                correct: "12"
+            },
+            {
+                question: "Quanto é 7 + 7?",
+                answers: ["13", "14", "15", "16"],
+                correct: "14"
+            },
+            {
+                question: "Quanto é 8 + 8?",
+                answers: ["15", "16", "17", "18"],
+                correct: "16"
+            },
+            {
+                question: "Quanto é 9 + 9?",
+                answers: ["17", "18", "19", "20"],
+                correct: "18"
+            },
+            {
+                question: "Quanto é 10 + 10?",
+                answers: ["19", "20", "21", "22"],
+                correct: "20"
+            },
+            {
+                question: "Quanto é 11 + 11?",
+                answers: ["21", "22", "23", "24"],
+                correct: "22"
+            },
+            {
+                question: "Quanto é 12 + 12?",
+                answers: ["23", "24", "25", "26"],
+                correct: "24"
+            },
+            {
+                question: "Quanto é 13 + 13?",
+                answers: ["25", "26", "27", "28"],
+                correct: "26"
+            },
+            {
+                question: "Quanto é 14 + 14?",
+                answers: ["27", "28", "29", "30"],
+                correct: "28"
+            },
+            {
+                question: "Quanto é 15 + 15?",
+                answers: ["29", "30", "31", "32"],
+                correct: "30"
+            },
+            {
+                question: "Quanto é 16 + 16?",
+                answers: ["31", "32", "33", "34"],
+                correct: "32"
+            },
+            {
+                question: "Quanto é 17 + 17?",
+                answers: ["33", "34", "35", "36"],
+                correct: "34"
+            },
+            {
+                question: "Quanto é 18 + 18?",
+                answers: ["35", "36", "37", "38"],
+                correct: "36"
+            },
+            {
+                question: "Quanto é 19 + 19?",
+                answers: ["37", "38", "39", "40"],
+                correct: "38"
+            },
+            {
+                question: "Quanto é 20 + 20?",
+                answers: ["39", "40", "41", "42"],
+                correct: "40"
+            },
+            {
+                question: "Quanto é 21 + 21?",
+                answers: ["41", "42", "43", "44"],
+                correct: "42"
+            },
+            {
+                question: "Quanto é 22 + 22?",
+                answers: ["43", "44", "45", "46"],
+                correct: "44"
+            },
+            {
+                question: "Quanto é 23 + 23?",
+                answers: ["45", "46", "47", "48"],
+                correct: "46"
+            },
+            {
+                question: "Quanto é 24 + 24?",
+                answers: ["47", "48", "49", "50"],
+                correct: "48"
+            },
+            {
+                question: "Quanto é 25 + 25?",
+                answers: ["49", "50", "51", "52"],
+                correct: "50"
+            },
+            {
+                question: "Quanto é 26 + 26?",
+                answers: ["51", "52", "53", "54"],
+                correct: "52"
+            },
+            {
+                question: "Quanto é 27 + 27?",
+                answers: ["53", "54", "55", "56"],
+                correct: "54"
+            },
+            {
+                question: "Quanto é 28 + 28?",
+                answers: ["55", "56", "57", "58"],
+                correct: "56"
+            },
+            {
+                question: "Quanto é 29 + 29?",
+                answers: ["57", "58", "59", "60"],
+                correct: "58"
+            },
+            {
+                question: "Quanto é 30 + 30?",
+                answers: ["59", "60", "61", "62"],
+                correct: "60"
+            }
+        ];
+
+        function createBoard() {
+            board.innerHTML = "";
+            for (let i = 0; i < totalSquares; i++) {
+                const square = document.createElement("div");
+                square.classList.add("square");
+                if (positions[1] === i) square.classList.add("player1");
+                if (positions[2] === i) square.classList.add("player2");
+                board.appendChild(square);
+            }
+        }
+
+        function askQuestion() {
+            const q = questions[Math.floor(Math.random() * questions.length)];
+            questionText.textContent = q.question;
+            answersDiv.innerHTML = "";
+            q.answers.forEach(answer => {
+                const btn = document.createElement("button");
+                btn.textContent = answer;
+                btn.onclick = () => {
+                    questionBox.style.display = "none";
+                    if (answer === q.correct) {
+                        positions[currentPlayer] += 1;
+                    }
+                    if (positions[currentPlayer] >= totalSquares - 1) {
+                        alert("Jogador " + currentPlayer + " venceu!");
+                        rollBtn.disabled = true;
+                        return;
+                    }
+                    currentPlayer = currentPlayer === 1 ? 2 : 1;
+                    turnInfo.textContent = "Vez do Jogador " + currentPlayer;
+                    createBoard();
+                };
+                answersDiv.appendChild(btn);
+            });
+            questionBox.style.display = "block";
+        }
+
+        rollBtn.onclick = () => {
+            const roll = Math.ceil(Math.random() * 6);
+            diceResult.textContent = "Número sorteado: " + roll;
+            askQuestion();
+        };
+
+        createBoard();
+    </script>
+</body>
+</html>
