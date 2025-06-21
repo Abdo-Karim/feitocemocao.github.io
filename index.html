@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Corrida do Saber</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f4f4f4; }
+        #board { display: flex; justify-content: center; margin-top: 20px; flex-wrap: wrap; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .square { width: 30px; height: 30px; margin: 2px; background: lightgray; display: inline-block; }
+        .player1 { background: blue; }
+        .player2 { background: red; }
+        #questionBox { margin-top: 20px; }
+        button { margin: 5px; padding: 10px 20px; }
+    </style>
+</head>
+<body>
+    <h1>Corrida do Saber</h1>
+    <p id="turnInfo">Vez do Jogador 1</p>
+    <button id="rollDice">Jogar dado</button>
+    <p id="diceResult"></p>
+    <div id="board"></div>
+    <div id="questionBox" style="display:none;">
+        <p id="questionText"></p>
+        <div id="answers"></div>
+    </div>
+
+    <!-- Sons -->
+    <audio id="rollSound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
+    <audio id="correctSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+    <audio id="winSound" src="https://actions.google.com/sounds/v1/cartoon/concussive_hit_guitar_boing.ogg"></audio>
+
+    <script>
+        const board = document.getElementById("board");
+        const rollBtn = document.getElementById("rollDice");
+        const diceResult = document.getElementById("diceResult");
+        const questionBox = document.getElementById("questionBox");
+        const questionText = document.getElementById("questionText");
+        const answersDiv = document.getElementById("answers");
+        const turnInfo = document.getElementById("turnInfo");
+
+        const rollSound = document.getElementById("rollSound");
+        const correctSound = document.getElementById("correctSound");
+        const winSound = document.getElementById("winSound");
+
+        const totalSquares = 30;
+        let currentPlayer = 1;
+        let positions = {1: 0, 2: 0};
+
+        const questions = Array.from({length: 28}, (_, i) => ({
+            question: `Pergunta número ${i + 1}: Quanto é ${i + 2} + ${i + 3}?`,
+            answers: [`${i + 3}`, `${i + 5}`, `${i + 6}`, `${i + 4}`],
+            correct: `${i + 5}`
+        })).concat([
+            {
+                question: "Quanto é 20 ÷ 5?",
+                answers: ["2", "4", "5", "6"],
+                correct: "4"
+            },
+            {
+                question: "Quanto é 3 × 7?",
+                answers: ["20", "21", "24", "18"],
+                correct: "21"
+            }
+        ]);
+
+        function createBoard() {
+            board.innerHTML = "";
+            for (let i = 0; i < totalSquares; i++) {
+                const square = document.createElement("div");
+                square.classList.add("square");
+                if (positions[1] === i) square.classList.add("player1");
+                if (positions[2] === i) square.classList.add("player2");
+                board.appendChild(square);
+            }
+        }
+
+        function askQuestion() {
+            const q = questions[Math.floor(Math.random() * questions.length)];
+            questionText.textContent = q.question;
+            answersDiv.innerHTML = "";
+            q.answers.forEach(answer => {
+                const btn = document.createElement("button");
+                btn.textContent = answer;
+                btn.onclick = () => {
+                    questionBox.style.display = "none";
+                    if (answer === q.correct) {
+                        positions[currentPlayer] += 1;
+                        correctSound.play();
+                    }
+                    if (positions[currentPlayer] >= totalSquares - 1) {
+                        createBoard();
+                        winSound.play();
+                        setTimeout(() => {
+                            alert("🎉 Jogador " + currentPlayer + " venceu!");
+                            rollBtn.disabled = true;
+                        }, 100);
+                        return;
+                    }
+                    currentPlayer = currentPlayer === 1 ? 2 : 1;
+                    turnInfo.textContent = "Vez do Jogador " + currentPlayer;
+                    createBoard();
+                };
+                answersDiv.appendChild(btn);
+            });
+            questionBox.style.display = "block";
+        }
+
+        rollBtn.onclick = () => {
+            rollSound.play();
+            const roll = Math.ceil(Math.random() * 6);
+            diceResult.textContent = "Número sorteado: " + roll;
+            askQuestion();
+        };
+
+        createBoard();
+    </script>
+</body>
+</html>
