@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Corrida do Saber</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        #board {
+            display: flex;
+            flex-wrap: wrap;
+            width: 520px;
+        }
+        .square {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #ccc;
+            text-align: center;
+            line-height: 50px;
+            margin: 2px;
+        }
+        .start {
+            background-color: #d4edda;
+        }
+        .end {
+            background-color: #f8d7da;
+        }
+        .regular {
+            background-color: #f0f0f0;
+        }
+        .player {
+            border: 3px solid #0000ff;
+        }
+        #questionBox {
+            background: #fff8dc;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 15px;
+        }
+        #answers button {
+            margin: 5px;
+            padding: 8px 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Corrida do Saber</h1>
+    <div id="board"></div>
+    <button id="rollDice">Jogar dado</button>
+    <p id="diceResult"></p>
+    <div id="questionBox" style="display: none;">
+        <p id="questionText"></p>
+        <div id="answers"></div>
+    </div>
+    <p id="turnInfo"></p>
+
+    <audio id="soundAcerto" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
+    <audio id="soundErro" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+    <audio id="soundVitoria" src="https://www.soundjay.com/human/sounds/applause-8.mp3"></audio>
+    <audio id="soundDado" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+
+    <script>
+        const board = document.getElementById("board");
+        const rollBtn = document.getElementById("rollDice");
+        const diceResult = document.getElementById("diceResult");
+        const questionBox = document.getElementById("questionBox");
+        const questionText = document.getElementById("questionText");
+        const answersDiv = document.getElementById("answers");
+        const turnInfo = document.getElementById("turnInfo");
+
+        const soundAcerto = document.getElementById("soundAcerto");
+        const soundErro = document.getElementById("soundErro");
+        const soundVitoria = document.getElementById("soundVitoria");
+        const soundDado = document.getElementById("soundDado");
+
+        const totalSquares = 31;
+        let currentPlayer = 1;
+        let positions = {1: 0, 2: 0};
+
+        const perguntas = ['Pergunta 1: Qual é a resposta correta?', 'Pergunta 2: Qual é a resposta correta?', 'Pergunta 3: Qual é a resposta correta?', 'Pergunta 4: Qual é a resposta correta?', 'Pergunta 5: Qual é a resposta correta?', 'Pergunta 6: Qual é a resposta correta?', 'Pergunta 7: Qual é a resposta correta?', 'Pergunta 8: Qual é a resposta correta?', 'Pergunta 9: Qual é a resposta correta?', 'Pergunta 10: Qual é a resposta correta?', 'Pergunta 11: Qual é a resposta correta?', 'Pergunta 12: Qual é a resposta correta?', 'Pergunta 13: Qual é a resposta correta?', 'Pergunta 14: Qual é a resposta correta?', 'Pergunta 15: Qual é a resposta correta?', 'Pergunta 16: Qual é a resposta correta?', 'Pergunta 17: Qual é a resposta correta?', 'Pergunta 18: Qual é a resposta correta?', 'Pergunta 19: Qual é a resposta correta?', 'Pergunta 20: Qual é a resposta correta?', 'Pergunta 21: Qual é a resposta correta?', 'Pergunta 22: Qual é a resposta correta?', 'Pergunta 23: Qual é a resposta correta?', 'Pergunta 24: Qual é a resposta correta?', 'Pergunta 25: Qual é a resposta correta?', 'Pergunta 26: Qual é a resposta correta?', 'Pergunta 27: Qual é a resposta correta?', 'Pergunta 28: Qual é a resposta correta?', 'Pergunta 29: Qual é a resposta correta?', 'Pergunta 30: Qual é a resposta correta?'];
+        const respostas = [['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C'], ['Opção A', 'Opção B', 'Opção C']];
+
+        for (let i = 0; i < totalSquares; i++) {
+            const square = document.createElement("div");
+            square.classList.add("square");
+            if (i === 0) {
+                square.classList.add("start");
+                square.textContent = "Início";
+            } else if (i === 30) {
+                square.classList.add("end");
+                square.textContent = "Chegada";
+            } else {
+                square.classList.add("regular");
+                square.textContent = i;
+            }
+            board.appendChild(square);
+        }
+
+        function updateBoard() {
+            const squares = document.querySelectorAll(".square");
+            squares.forEach(sq => sq.classList.remove("player"));
+            if (positions[1] < totalSquares) {
+                squares[positions[1]].classList.add("player");
+            }
+        }
+
+        function showQuestion(index) {
+            if (index <= 0 || index > perguntas.length) {
+                questionBox.style.display = "none";
+                return;
+            }
+            questionBox.style.display = "block";
+            questionText.textContent = perguntas[index - 1];
+            answersDiv.innerHTML = "";
+
+            respostas[index - 1].forEach(option => {
+                const btn = document.createElement("button");
+                btn.textContent = option;
+                btn.onclick = () => {
+                    if (option === "Opção B") {
+                        soundAcerto.play();
+                        alert("Correto!");
+                    } else {
+                        soundErro.play();
+                        alert("Errado!");
+                    }
+                    questionBox.style.display = "none";
+                };
+                answersDiv.appendChild(btn);
+            });
+        }
+
+        rollBtn.addEventListener("click", () => {
+            soundDado.play();
+            const roll = Math.ceil(Math.random() * 6);
+            diceResult.textContent = "Dado: " + roll;
+
+            positions[currentPlayer] += roll;
+            if (positions[currentPlayer] >= totalSquares - 1) {
+                soundVitoria.play();
+                alert("Jogador " + currentPlayer + " venceu!");
+                positions = {1: 0, 2: 0};
+                updateBoard();
+                turnInfo.textContent = "Vez do jogador " + currentPlayer;
+                return;
+            }
+
+            updateBoard();
+            showQuestion(positions[currentPlayer]);
+
+            currentPlayer = currentPlayer === 1 ? 2 : 1;
+            turnInfo.textContent = "Vez do jogador " + currentPlayer;
+        });
+
+        updateBoard();
+        turnInfo.textContent = "Vez do jogador " + currentPlayer;
+    </script>
+</body>
+</html>
