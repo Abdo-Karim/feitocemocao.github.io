@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -11,10 +12,9 @@
     <div id="board"></div>
     <div id="questionBox"></div>
     <button onclick="rollDice()">Jogar dado 🎲</button>
-    <button onclick="restartGame()">Reiniciar</button>
-    <div id="timer">⏱️ 00:00</div>
-    <audio id="soundAcerto" src="sons/acerto.mp3"></audio>
-    <audio id="soundErro" src="sons/erro.mp3"></audio>
+    <div id="timer">⏱️ Tempo: <span id="time">0</span>s</div>
+    <audio id="sound-correct" src="acerto.mp3" preload="auto"></audio>
+    <audio id="sound-wrong" src="erro.mp3" preload="auto"></audio>
     <script src="perguntas.js"></script>
     <script src="script.js"></script>
 </body>
