@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Corrida do Saber</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f9f9f9; }
+        h1 { color: #333; }
+        .board { display: grid; grid-template-columns: repeat(6, 60px); gap: 10px; justify-content: center; margin: 20px 0; }
+        .cell { width: 60px; height: 60px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 6px; }
+        .player1 { background: red !important; }
+        .player2 { background: blue !important; }
+        .highlight { border: 3px solid #999; }
+        button { padding: 10px 20px; margin: 10px; font-size: 16px; border-radius: 5px; border: none; background: #4CAF50; color: white; cursor: pointer; }
+        .question { margin-top: 20px; }
+        .answers button { margin: 5px; background-color: #2196F3; }
+        .message { font-size: 18px; font-weight: bold; margin-top: 10px; }
+        .timer { font-size: 18px; margin-top: 10px; color: #444; }
+    </style>
+</head>
+<body>
+    <h1>Corrida do Saber</h1>
+    <div id="turnInfo">Vez do Jogador 1</div>
+    <div class="timer">⏱ Tempo: <span id="timer">0</span> segundos</div>
+    <button onclick="rollDice()">Jogar dado</button>
+    <button onclick="restartGame()">🔄 Reiniciar jogo</button>
+    <div id="diceResult"></div>
+    <div class="board" id="board"></div>
+    <div class="question" id="questionBox" style="display:none;">
+        <div id="questionText"></div>
+        <div class="answers" id="answers"></div>
+    </div>
+    <div class="message" id="message"></div>
+
+    <audio id="successSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c398512675.mp3?filename=correct-2-46134.mp3"></audio>
+    <audio id="errorSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_05e122f173.mp3?filename=error-2-36030.mp3"></audio>
+
+    <script>
+        const board = document.getElementById("board");
+        const rollBtn = document.querySelector("button");
+        const diceResult = document.getElementById("diceResult");
+        const questionBox = document.getElementById("questionBox");
+        const questionText = document.getElementById("questionText");
+        const answersDiv = document.getElementById("answers");
+        const messageDiv = document.getElementById("message");
+        const turnInfo = document.getElementById("turnInfo");
+
+        let totalSquares = 30;
+        let currentPlayer = 1;
+        let positions = [0, 0];
+        let questions = [
+            { q: "Quanto é 12 + 12?", a: ["23", "24", "25", "26"], c: "24" },
+            { q: "Quanto é 9 + 10?", a: ["19", "20", "21", "22"], c: "19" },
+            { q: "Quanto é 5 x 4?", a: ["10", "15", "20", "25"], c: "20" }
+        ];
+
+        let timer = 0;
+        let timerInterval = setInterval(() => {
+            timer++;
+            document.getElementById("timer").innerText = timer;
+        }, 1000);
+
+        function drawBoard() {
+            board.innerHTML = "";
+            for (let i = 1; i <= totalSquares; i++) {
+                const cell = document.createElement("div");
+                cell.className = "cell";
+                if (positions[0] === i) cell.classList.add("player1");
+                if (positions[1] === i) cell.classList.add("player2");
+                cell.innerText = i;
+                board.appendChild(cell);
+            }
+        }
+
+        function rollDice() {
+            let roll = Math.floor(Math.random() * 6) + 1;
+            diceResult.innerText = "Número sorteado: " + roll;
+            positions[currentPlayer - 1] += roll;
+            if (positions[currentPlayer - 1] >= totalSquares) {
+                alert("Jogador " + currentPlayer + " venceu!");
+                restartGame();
+                return;
+            }
+            askQuestion();
+            drawBoard();
+        }
+
+        function askQuestion() {
+            const q = questions[Math.floor(Math.random() * questions.length)];
+            questionBox.style.display = "block";
+            questionText.innerText = q.q;
+            answersDiv.innerHTML = "";
+            q.a.forEach(a => {
+                let btn = document.createElement("button");
+                btn.innerText = a;
+                btn.onclick = () => checkAnswer(a === q.c, q.c);
+                answersDiv.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(correct, correctAnswer) {
+            const msg = document.getElementById("message");
+            const successSound = document.getElementById("successSound");
+            const errorSound = document.getElementById("errorSound");
+            if (correct) {
+                msg.innerText = "✅ Acertou!";
+                successSound.play();
+            } else {
+                msg.innerText = `❌ Errou! A resposta correta era: ${correctAnswer}`;
+                errorSound.play();
+                positions[currentPlayer - 1] -= 2;
+                if (positions[currentPlayer - 1] < 0) positions[currentPlayer - 1] = 0;
+            }
+            questionBox.style.display = "none";
+            currentPlayer = currentPlayer === 1 ? 2 : 1;
+            turnInfo.innerText = "Vez do Jogador " + currentPlayer;
+            drawBoard();
+        }
+
+        function restartGame() {
+            positions = [0, 0];
+            currentPlayer = 1;
+            timer = 0;
+            document.getElementById("timer").innerText = timer;
+            turnInfo.innerText = "Vez do Jogador 1";
+            diceResult.innerText = "";
+            messageDiv.innerText = "";
+            drawBoard();
+        }
+
+        drawBoard();
+    </script>
+</body>
+</html>
