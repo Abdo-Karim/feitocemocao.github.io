@@ -1,0 +1,32 @@
+body {
+    font-family: sans-serif;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+#board {
+    display: grid;
+    grid-template-columns: repeat(6, 60px);
+    gap: 5px;
+    justify-content: center;
+    margin-top: 20px;
+}
+.square {
+    width: 60px;
+    height: 60px;
+    background: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-weight: bold;
+}
+.active {
+    background: #ffa;
+}
+#questionBox {
+    margin-top: 20px;
+}
+button {
+    margin: 10px;
+    padding: 10px 20px;
+}
