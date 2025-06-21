@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Corrida do Saber</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f8f8;
+    }
+    h1 {
+      background-color: #4CAF50;
+      color: white;
+      padding: 15px 0;
+    }
+    #board {
+      display: grid;
+      grid-template-columns: repeat(6, 60px);
+      grid-gap: 10px;
+      justify-content: center;
+      margin: 20px auto;
+    }
+    .square {
+      width: 60px;
+      height: 60px;
+      background-color: lightgray;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      border-radius: 5px;
+    }
+    .player1 { background-color: red !important; color: white; }
+    .player2 { background-color: blue !important; color: white; }
+    .question, .timer, .result {
+      margin: 10px 0;
+      font-size: 18px;
+    }
+    .answer {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: #00bcd4;
+      color: white;
+      cursor: pointer;
+    }
+    .answer:hover { background-color: #0097a7; }
+    .btn {
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: green;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .btn:hover { background-color: #357a38; }
+  </style>
+</head>
+<body>
+  <h1>Corrida do Saber</h1>
+  <div id="turnInfo">Vez do Jogador 1</div>
+  <div class="timer" id="timer">⏱️ Tempo: 30 segundos</div>
+  <button class="btn" onclick="rollDice()">Jogar dado</button>
+  <button class="btn" onclick="restartGame()">🔁 Reiniciar jogo</button>
+  <div id="diceResult">Número sorteado: -</div>
+  <div id="board"></div>
+  <div id="questionBox" class="question">
+    <div id="questionText"></div>
+    <div id="answers"></div>
+  </div>
+  <div class="result" id="result"></div>
+
+  <audio id="correctSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+  <audio id="wrongSound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
+
+  <script>
+    const totalSquares = 30;
+    const board = document.getElementById("board");
+    const questionBox = document.getElementById("questionBox");
+    const questionText = document.getElementById("questionText");
+    const answersDiv = document.getElementById("answers");
+    const turnInfo = document.getElementById("turnInfo");
+    const diceResult = document.getElementById("diceResult");
+    const timerDisplay = document.getElementById("timer");
+    const correctSound = document.getElementById("correctSound");
+    const wrongSound = document.getElementById("wrongSound");
+
+    let currentPlayer = 1;
+    let positions = [0, 0];
+    let timer, timeLeft = 30;
+    let currentAnswer = "";
+
+    const questions = [
+      { q: "Quanto é 5 x 4?", a: ["10", "15", "20", "25"], c: "20" },
+      { q: "Qual é a capital do Brasil?", a: ["São Paulo", "Rio", "Brasília", "Curitiba"], c: "Brasília" },
+      { q: "Qual é a cor do céu em um dia claro?", a: ["Azul", "Verde", "Rosa", "Amarelo"], c: "Azul" },
+      { q: "Qual é o resultado de 12 + 12?", a: ["23", "24", "25", "26"], c: "24" },
+      { q: "Qual animal mia?", a: ["Cachorro", "Gato", "Pássaro", "Cavalo"], c: "Gato" },
+      { q: "Qual planeta é conhecido como Planeta Vermelho?", a: ["Terra", "Vênus", "Marte", "Júpiter"], c: "Marte" }
+    ];
+
+    function createBoard() {
+      board.innerHTML = "";
+      for (let i = 1; i <= totalSquares; i++) {
+        const square = document.createElement("div");
+        square.className = "square";
+        square.innerText = i;
+        board.appendChild(square);
+      }
+    }
+
+    function updateBoard() {
+      const squares = board.children;
+      for (let i = 0; i < totalSquares; i++) {
+        squares[i].classList.remove("player1", "player2");
+      }
+      if (positions[0] < totalSquares) squares[positions[0]].classList.add("player1");
+      if (positions[1] < totalSquares) squares[positions[1]].classList.add("player2");
+    }
+
+    function rollDice() {
+      if (timer) clearInterval(timer);
+      timeLeft = 30;
+      startTimer();
+
+      const roll = Math.floor(Math.random() * 6) + 1;
+      diceResult.textContent = `Número sorteado: ${roll}`;
+      showQuestion(roll);
+    }
+
+    function showQuestion(roll) {
+      const q = questions[Math.floor(Math.random() * questions.length)];
+      currentAnswer = q.c;
+      questionText.textContent = q.q;
+      answersDiv.innerHTML = "";
+      q.a.forEach(ans => {
+        const btn = document.createElement("button");
+        btn.className = "answer";
+        btn.textContent = ans;
+        btn.onclick = () => checkAnswer(ans, roll);
+        answersDiv.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selected, roll) {
+      clearInterval(timer);
+      if (selected === currentAnswer) {
+        correctSound.play();
+        let pos = positions[currentPlayer - 1] + roll;
+        if (pos === totalSquares) {
+          positions[currentPlayer - 1] = pos;
+          updateBoard();
+          questionText.textContent = `🎉 Jogador ${currentPlayer} venceu!`;
+          answersDiv.innerHTML = "";
+          return;
+        } else if (pos < totalSquares) {
+          positions[currentPlayer - 1] = pos;
+        }
+      } else {
+        wrongSound.play();
+      }
+      currentPlayer = currentPlayer === 1 ? 2 : 1;
+      updateBoard();
+      turnInfo.textContent = `Vez do Jogador ${currentPlayer}`;
+      questionText.textContent = "";
+      answersDiv.innerHTML = "";
+    }
+
+    function startTimer() {
+      timerDisplay.textContent = `⏱️ Tempo: ${timeLeft} segundos`;
+      timer = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = `⏱️ Tempo: ${timeLeft} segundos`;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          wrongSound.play();
+          currentPlayer = currentPlayer === 1 ? 2 : 1;
+          turnInfo.textContent = `Vez do Jogador ${currentPlayer}`;
+          questionText.textContent = "⏱️ Tempo esgotado!";
+          answersDiv.innerHTML = "";
+        }
+      }, 1000);
+    }
+
+    function restartGame() {
+      if (timer) clearInterval(timer);
+      positions = [0, 0];
+      currentPlayer = 1;
+      timeLeft = 30;
+      diceResult.textContent = "Número sorteado: -";
+      questionText.textContent = "";
+      answersDiv.innerHTML = "";
+      turnInfo.textContent = "Vez do Jogador 1";
+      timerDisplay.textContent = "⏱️ Tempo: 30 segundos";
+      updateBoard();
+    }
+
+    createBoard();
+    updateBoard();
+  </script>
+</body>
+</html>
