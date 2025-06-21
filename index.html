@@ -1,13 +1,131 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head><meta charset="UTF-8"><title>Feito com Cálculo e Coração</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Corrida do Saber</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background-color: #f9f9f9; }
+        #board { display: grid; grid-template-columns: repeat(6, 60px); gap: 5px; justify-content: center; margin-top: 20px; }
+        .square { width: 60px; height: 60px; background: #ddd; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: bold; }
+        .active { background: #ffa; }
+        #questionBox { margin-top: 20px; }
+        button { margin: 10px; padding: 10px 20px; }
+    </style>
+</head>
 <body>
-    <h1>Feito com Cálculo e Coração</h1>
-    <ul>
-        <li><a href="jogo/">Jogo</a></li>
-        <li><a href="#">Sobre</a></li>
-        <li><a href="#">Contato</a></li>
-    </ul>
+    <h1>Corrida do Saber</h1>
+    <div id="turnInfo">Clique para jogar!</div>
+    <div id="board"></div>
+    <button onclick="rollDice()">🎲 Jogar dado</button>
+    <div id="diceResult"></div>
+    <div id="questionBox" style="display:none;">
+        <p id="questionText"></p>
+        <div id="answers"></div>
+    </div>
+    <p id="feedback"></p>
+    <audio id="correctSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_d86d5ed5e5.mp3"></audio>
+    <audio id="wrongSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_c0e1d6011d.mp3"></audio>
+
+    <script>
+        const totalSquares = 30;
+        const board = document.getElementById("board");
+        const diceResult = document.getElementById("diceResult");
+        const questionBox = document.getElementById("questionBox");
+        const questionText = document.getElementById("questionText");
+        const answersDiv = document.getElementById("answers");
+        const turnInfo = document.getElementById("turnInfo");
+        const feedback = document.getElementById("feedback");
+
+        const correctSound = document.getElementById("correctSound");
+        const wrongSound = document.getElementById("wrongSound");
+
+        let position = 0;
+        let questions = [
+            { q: "Qual é o plural de 'cão'?", a: ["Cães", "Cãos", "Cãoses"], c: 0 },
+            { q: "Quanto é 7 x 6?", a: ["42", "36", "48"], c: 0 },
+            { q: "Qual é a capital do Brasil?", a: ["Brasília", "Rio de Janeiro", "São Paulo"], c: 0 },
+            { q: "Quanto é 100 dividido por 4?", a: ["25", "20", "30"], c: 0 },
+            { q: "Qual é o contrário de 'feliz'?", a: ["Triste", "Contente", "Alegre"], c: 0 },
+            { q: "Quanto é 9 + 8?", a: ["17", "16", "18"], c: 0 },
+            { q: "Qual é a cor do céu em um dia claro?", a: ["Azul", "Verde", "Cinza"], c: 0 },
+            { q: "Quanto é 12 - 4?", a: ["8", "6", "9"], c: 0 },
+            { q: "Qual animal mia?", a: ["Gato", "Cachorro", "Cavalo"], c: 0 },
+            { q: "Quanto é 5 x 5?", a: ["25", "20", "30"], c: 0 },
+            { q: "Qual planeta é conhecido como planeta vermelho?", a: ["Marte", "Vênus", "Júpiter"], c: 0 },
+            { q: "Quanto é 50 + 25?", a: ["75", "65", "85"], c: 0 },
+            { q: "Qual desses é um inseto?", a: ["Formiga", "Gato", "Peixe"], c: 0 },
+            { q: "Quanto é 11 + 6?", a: ["17", "18", "19"], c: 0 },
+            { q: "Qual é o menor número primo?", a: ["2", "1", "3"], c: 0 },
+            { q: "Quanto é 8 x 3?", a: ["24", "21", "27"], c: 0 },
+            { q: "Qual destes é um mamífero?", a: ["Golfinho", "Tubarão", "Polvo"], c: 0 },
+            { q: "Quanto é 18 - 9?", a: ["9", "10", "8"], c: 0 },
+            { q: "Qual é a forma correta: 'fazem anos' ou 'faz anos'?", a: ["Faz anos", "Fazem anos"], c: 0 },
+            { q: "Quanto é 10 + 15?", a: ["25", "20", "30"], c: 0 },
+            { q: "Qual desses é um continente?", a: ["Ásia", "Egito", "Brasil"], c: 0 },
+            { q: "Quanto é 40 dividido por 5?", a: ["8", "6", "10"], c: 0 },
+            { q: "Qual desses animais voa?", a: ["Pássaro", "Leão", "Canguru"], c: 0 },
+            { q: "Quanto é 6 x 6?", a: ["36", "30", "42"], c: 0 },
+            { q: "Qual é a cor da neve?", a: ["Branca", "Preta", "Amarela"], c: 0 },
+            { q: "Quanto é 27 + 3?", a: ["30", "29", "28"], c: 0 },
+            { q: "Qual desses é um verbo?", a: ["Correr", "Bonito", "Mesa"], c: 0 },
+            { q: "Quanto é 90 - 60?", a: ["30", "20", "40"], c: 0 },
+            { q: "Qual desses é um meio de transporte?", a: ["Ônibus", "Cadeira", "Computador"], c: 0 },
+            { q: "Quanto é 10 x 3?", a: ["30", "20", "40"], c: 0 }
+        ];
+
+        function createBoard() {
+            board.innerHTML = '';
+            for (let i = 1; i <= totalSquares; i++) {
+                const square = document.createElement("div");
+                square.classList.add("square");
+                square.innerText = i;
+                if (i === position + 1) square.classList.add("active");
+                board.appendChild(square);
+            }
+        }
+
+        function rollDice() {
+            if (position >= totalSquares) return;
+            const roll = Math.floor(Math.random() * 6) + 1;
+            diceResult.innerText = `Você tirou: ${roll}`;
+            const nextPos = position + roll;
+            if (nextPos > totalSquares) {
+                feedback.innerText = "Você precisa tirar o número exato para vencer!";
+                return;
+            }
+            showQuestion(nextPos - 1);
+        }
+
+        function showQuestion(index) {
+            questionBox.style.display = "block";
+            const q = questions[index % questions.length];
+            questionText.innerText = q.q;
+            answersDiv.innerHTML = '';
+            q.a.forEach((ans, i) => {
+                const btn = document.createElement("button");
+                btn.innerText = ans;
+                btn.onclick = () => checkAnswer(i === q.c, index);
+                answersDiv.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(isCorrect, index) {
+            if (isCorrect) {
+                correctSound.play();
+                feedback.innerText = "✅ Resposta certa!";
+                position = index + 1;
+                if (position === totalSquares) {
+                    feedback.innerText = "🎉 Parabéns! Você venceu!";
+                }
+            } else {
+                wrongSound.play();
+                feedback.innerText = "❌ Resposta errada! Tente novamente.";
+            }
+            questionBox.style.display = "none";
+            createBoard();
+        }
+
+        createBoard();
+    </script>
 </body>
 </html>
