@@ -1,32 +1,52 @@
 const perguntas = [
-    { pergunta: "Quanto é 5 + 3?", resposta: "8", opcoes: ["6", "8", "9"] },
-    { pergunta: "Qual é a capital do Brasil?", resposta: "Brasília", opcoes: ["Rio", "Brasília", "São Paulo"] },
-    { pergunta: "Quanto é 9 - 4?", resposta: "5", opcoes: ["4", "5", "6"] },
-    { pergunta: "Quem descobriu o Brasil?", resposta: "Pedro Álvares Cabral", opcoes: ["Dom Pedro", "Pedro Álvares Cabral", "Tiradentes"] },
-    { pergunta: "Quanto é 6 x 2?", resposta: "12", opcoes: ["12", "10", "14"] },
-    { pergunta: "Pergunta extra 6?", resposta: "Resposta 6", opcoes: ["Resposta 5", "Resposta 6", "Resposta 7"] }
-    { pergunta: "Pergunta extra 7?", resposta: "Resposta 7", opcoes: ["Resposta 6", "Resposta 7", "Resposta 8"] }
-    { pergunta: "Pergunta extra 8?", resposta: "Resposta 8", opcoes: ["Resposta 7", "Resposta 8", "Resposta 9"] }
-    { pergunta: "Pergunta extra 9?", resposta: "Resposta 9", opcoes: ["Resposta 8", "Resposta 9", "Resposta 10"] }
-    { pergunta: "Pergunta extra 10?", resposta: "Resposta 10", opcoes: ["Resposta 9", "Resposta 10", "Resposta 11"] }
-    { pergunta: "Pergunta extra 11?", resposta: "Resposta 11", opcoes: ["Resposta 10", "Resposta 11", "Resposta 12"] }
-    { pergunta: "Pergunta extra 12?", resposta: "Resposta 12", opcoes: ["Resposta 11", "Resposta 12", "Resposta 13"] }
-    { pergunta: "Pergunta extra 13?", resposta: "Resposta 13", opcoes: ["Resposta 12", "Resposta 13", "Resposta 14"] }
-    { pergunta: "Pergunta extra 14?", resposta: "Resposta 14", opcoes: ["Resposta 13", "Resposta 14", "Resposta 15"] }
-    { pergunta: "Pergunta extra 15?", resposta: "Resposta 15", opcoes: ["Resposta 14", "Resposta 15", "Resposta 16"] }
-    { pergunta: "Pergunta extra 16?", resposta: "Resposta 16", opcoes: ["Resposta 15", "Resposta 16", "Resposta 17"] }
-    { pergunta: "Pergunta extra 17?", resposta: "Resposta 17", opcoes: ["Resposta 16", "Resposta 17", "Resposta 18"] }
-    { pergunta: "Pergunta extra 18?", resposta: "Resposta 18", opcoes: ["Resposta 17", "Resposta 18", "Resposta 19"] }
-    { pergunta: "Pergunta extra 19?", resposta: "Resposta 19", opcoes: ["Resposta 18", "Resposta 19", "Resposta 20"] }
-    { pergunta: "Pergunta extra 20?", resposta: "Resposta 20", opcoes: ["Resposta 19", "Resposta 20", "Resposta 21"] }
-    { pergunta: "Pergunta extra 21?", resposta: "Resposta 21", opcoes: ["Resposta 20", "Resposta 21", "Resposta 22"] }
-    { pergunta: "Pergunta extra 22?", resposta: "Resposta 22", opcoes: ["Resposta 21", "Resposta 22", "Resposta 23"] }
-    { pergunta: "Pergunta extra 23?", resposta: "Resposta 23", opcoes: ["Resposta 22", "Resposta 23", "Resposta 24"] }
-    { pergunta: "Pergunta extra 24?", resposta: "Resposta 24", opcoes: ["Resposta 23", "Resposta 24", "Resposta 25"] }
-    { pergunta: "Pergunta extra 25?", resposta: "Resposta 25", opcoes: ["Resposta 24", "Resposta 25", "Resposta 26"] }
-    { pergunta: "Pergunta extra 26?", resposta: "Resposta 26", opcoes: ["Resposta 25", "Resposta 26", "Resposta 27"] }
-    { pergunta: "Pergunta extra 27?", resposta: "Resposta 27", opcoes: ["Resposta 26", "Resposta 27", "Resposta 28"] }
-    { pergunta: "Pergunta extra 28?", resposta: "Resposta 28", opcoes: ["Resposta 27", "Resposta 28", "Resposta 29"] }
-    { pergunta: "Pergunta extra 29?", resposta: "Resposta 29", opcoes: ["Resposta 28", "Resposta 29", "Resposta 30"] }
-    { pergunta: "Pergunta extra 30?", resposta: "Resposta 30", opcoes: ["Resposta 29", "Resposta 30", "Resposta 31"] }
-];
+{ pergunta: "Quanto é 5 + 3?", resposta: "8", opcoes: ["6", "8", "9"] },
+{ pergunta: "Quanto é 9 - 4?", resposta: "5", opcoes: ["4", "5", "6"] },
+{ pergunta: "Quanto é 6 x 2?", resposta: "12", opcoes: ["12", "10", "14"] },
+{ pergunta: "Quanto é 8 x 7?", resposta: "56", opcoes: ["54", "56", "58"] },
+{ pergunta: "Quanto é 15 ÷ 3?", resposta: "5", opcoes: ["3", "5", "6"] },
+{ pergunta: "Qual é o menor número primo?", resposta: "2", opcoes: ["1", "2", "3"] },
+{ pergunta: "Quanto é 10 + 10?", resposta: "20", opcoes: ["20", "10", "30"] },
+{ pergunta: "Qual é a capital do Brasil?", resposta: "Brasília", opcoes: ["Rio de Janeiro", "São Paulo", "Brasília"] },
+{ pergunta: "Quanto é 7 x 5?", resposta: "35", opcoes: ["30", "35", "40"] },
+{ pergunta: "Quanto é 100 - 25?", resposta: "75", opcoes: ["50", "75", "100"] },
+{ pergunta: "Quanto é 9 x 9?", resposta: "81", opcoes: ["72", "81", "90"] },
+{ pergunta: "Qual planeta é conhecido como o Planeta Vermelho?", resposta: "Marte", opcoes: ["Júpiter", "Saturno", "Marte"] },
+{ pergunta: "Qual o maior planeta do sistema solar?", resposta: "Júpiter", opcoes: ["Saturno", "Terra", "Júpiter"] },
+{ pergunta: "O que usamos para respirar?", resposta: "Pulmões", opcoes: ["Estômago", "Pulmões", "Rins"] },
+{ pergunta: "Qual o nome do nosso satélite natural?", resposta: "Lua", opcoes: ["Sol", "Estrela", "Lua"] },
+{ pergunta: "Qual é o maior órgão do corpo humano?", resposta: "Pele", opcoes: ["Fígado", "Pele", "Coração"] },
+{ pergunta: "Qual gás é essencial para a respiração?", resposta: "Oxigênio", opcoes: ["Hidrogênio", "Oxigênio", "Gás carbônico"] },
+{ pergunta: "Quantos sentidos temos?", resposta: "5", opcoes: ["4", "5", "6"] },
+{ pergunta: "Qual parte do corpo usamos para ouvir?", resposta: "Ouvidos", opcoes: ["Olhos", "Ouvidos", "Boca"] },
+{ pergunta: "Qual o animal mais rápido do mundo?", resposta: "Guepardo", opcoes: ["Leão", "Guepardo", "Águia"] },
+{ pergunta: "Qual é o estado da água em forma de vapor?", resposta: "Gasoso", opcoes: ["Líquido", "Gasoso", "Sólido"] },
+{ pergunta: "Qual é a capital do Brasil?", resposta: "Brasília", opcoes: ["Rio de Janeiro", "São Paulo", "Brasília"] },
+{ pergunta: "Quem descobriu o Brasil?", resposta: "Pedro Álvares Cabral", opcoes: ["Tiradentes", "Dom Pedro", "Pedro Álvares Cabral"] },
+{ pergunta: "Em que continente está o Egito?", resposta: "África", opcoes: ["Ásia", "Europa", "África"] },
+{ pergunta: "Qual país tem a maior população do mundo?", resposta: "China", opcoes: ["Índia", "EUA", "China"] },
+{ pergunta: "Qual é o menor continente?", resposta: "Oceania", opcoes: ["África", "Ásia", "Oceania"] },
+{ pergunta: "Qual é o rio mais extenso do mundo?", resposta: "Amazonas", opcoes: ["Nilo", "Tigre", "Amazonas"] },
+{ pergunta: "Qual é o ponto mais alto do mundo?", resposta: "Monte Everest", opcoes: ["K2", "Pico da Neblina", "Monte Everest"] },
+{ pergunta: "Qual era o nome do Brasil antes?", resposta: "Terra de Santa Cruz", opcoes: ["Terra Brasilis", "Ilha de Vera Cruz", "Terra de Santa Cruz"] },
+{ pergunta: "Quem foi o primeiro presidente do Brasil?", resposta: "Deodoro da Fonseca", opcoes: ["Getúlio Vargas", "Dom Pedro II", "Deodoro da Fonseca"] },
+{ pergunta: "Qual é o oceano entre África e América?", resposta: "Atlântico", opcoes: ["Índico", "Pacífico", "Atlântico"] },
+{ pergunta: "Qual é o plural de 'pão'?", resposta: "Pães", opcoes: ["Pãos", "Pãezes", "Pães"] },
+{ pergunta: "Qual é o antônimo de 'claro'?", resposta: "Escuro", opcoes: ["Luz", "Escuro", "Branco"] },
+{ pergunta: "Qual é a forma correta: 'caza' ou 'casa'?", resposta: "Casa", opcoes: ["Caza", "Kasa", "Casa"] },
+{ pergunta: "Complete: A ____ está no céu.", resposta: "Lua", opcoes: ["Chuva", "Lua", "Árvore"] },
+{ pergunta: "Como se escreve 'chuchu' corretamente?", resposta: "Chuchu", opcoes: ["Xuxu", "Chuxu", "Chuchu"] },
+{ pergunta: "Qual dessas palavras é um verbo?", resposta: "Correr", opcoes: ["Rápido", "Correr", "Bonito"] },
+{ pergunta: "Qual é o aumentativo de 'casa'?", resposta: "Casarão", opcoes: ["Casebre", "Casinha", "Casarão"] },
+{ pergunta: "Qual é o feminino de 'professor'?", resposta: "Professora", opcoes: ["Professora", "Mestre", "Professário"] },
+{ pergunta: "Qual dessas palavras tem acento?", resposta: "Café", opcoes: ["Papel", "Café", "Tigre"] },
+{ pergunta: "Qual é o sinônimo de 'alegre'?", resposta: "Feliz", opcoes: ["Triste", "Bravo", "Feliz"] },
+{ pergunta: "Quantos dias tem uma semana?", resposta: "7", opcoes: ["5", "6", "7"] },
+{ pergunta: "Quantos meses têm 28 dias?", resposta: "Todos", opcoes: ["Um", "Fevereiro", "Todos"] },
+{ pergunta: "Qual animal mia?", resposta: "Gato", opcoes: ["Cachorro", "Gato", "Pato"] },
+{ pergunta: "Qual é o símbolo da sabedoria?", resposta: "Coruja", opcoes: ["Leão", "Coruja", "Cavalo"] },
+{ pergunta: "O que usamos para medir temperatura?", resposta: "Termômetro", opcoes: ["Bússola", "Termômetro", "Régua"] },
+{ pergunta: "O que é usado para escrever no quadro?", resposta: "Giz", opcoes: ["Caneta", "Lápis", "Giz"] },
+{ pergunta: "Qual fruta tem nome de cor?", resposta: "Laranja", opcoes: ["Maçã", "Uva", "Laranja"] },
+{ pergunta: "Qual é a cor do céu em um dia claro?", resposta: "Azul", opcoes: ["Verde", "Branco", "Azul"] },
+{ pergunta: "Onde vivem os peixes?", resposta: "Na água", opcoes: ["No ar", "Na terra", "Na água"] },
+{ pergunta: "Qual é o contrário de quente?", resposta: "Frio", opcoes: ["Morno", "Gelado", "Frio"] }
