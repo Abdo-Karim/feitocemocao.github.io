@@ -1,0 +1,45 @@
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f8ff;
+    margin: 0;
+    padding: 20px;
+}
+#board {
+    display: grid;
+    grid-template-columns: repeat(6, 50px);
+    gap: 5px;
+    justify-content: center;
+    margin: 20px 0;
+}
+.square {
+    width: 50px;
+    height: 50px;
+    background-color: #ddd;
+    line-height: 50px;
+    font-weight: bold;
+}
+.square.active1 {
+    background-color: #4caf50;
+    color: white;
+}
+.square.active2 {
+    background-color: #2196f3;
+    color: white;
+}
+#questionBox {
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px auto;
+    border: 2px solid #ccc;
+    width: 300px;
+}
+.hidden {
+    display: none;
+}
+button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+}
