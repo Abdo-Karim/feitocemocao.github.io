@@ -1,1 +1,25 @@
-
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Corrida do Saber</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Corrida do Saber</h1>
+    <div id="turnInfo">Clique em Jogar Dado</div>
+    <div id="board"></div>
+    <div id="questionBox" class="hidden">
+        <p id="questionText"></p>
+        <div id="answers"></div>
+    </div>
+    <div class="controls">
+        <button onclick="rollDice()">🎲 Jogar Dado</button>
+        <button onclick="resetGame()">🔄 Reiniciar</button>
+    </div>
+    <audio id="acerto" src="acerto.mp3"></audio>
+    <audio id="erro" src="erro.mp3"></audio>
+    <script src="perguntas.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
