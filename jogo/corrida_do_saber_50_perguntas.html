@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Corrida do Saber</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 20px; }
+    #board { display: flex; justify-content: center; flex-wrap: wrap; width: 400px; margin: auto; }
+    .square { width: 40px; height: 40px; border: 1px solid #000; box-sizing: border-box; }
+    .player1 { background: red; width: 100%; height: 100%; }
+    .player2 { background: blue; width: 100%; height: 100%; }
+    button { margin: 10px; padding: 10px 20px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>Corrida do Saber</h1>
+  <div id="turnInfo">Clique para jogar 🎲</div>
+  <div id="board"></div>
+  <div id="questionBox"></div>
+  <button onclick="rollDice()">Jogar dado 🎲</button>
+  <button onclick="reiniciarJogo()">Reiniciar</button>
+
+  <audio id="somAcerto" src="acerto.mp3" preload="auto"></audio>
+  <audio id="somErro" src="erro.mp3" preload="auto"></audio>
+
+  <script>
+    const board = document.getElementById("board");
+    const questionBox = document.getElementById("questionBox");
+    const turnInfo = document.getElementById("turnInfo");
+    const somAcerto = document.getElementById("somAcerto");
+    const somErro = document.getElementById("somErro");
+
+    const questions = [
+      { pergunta: "Quanto é 5 + 3?", resposta: "8", opcoes: ["6", "8", "9"] },
+      { pergunta: "Quanto é 9 - 4?", resposta: "5", opcoes: ["4", "5", "6"] },
+      { pergunta: "Quanto é 6 x 2?", resposta: "12", opcoes: ["12", "10", "14"] },
+      { pergunta: "Quanto é 8 x 7?", resposta: "56", opcoes: ["54", "56", "58"] },
+      { pergunta: "Quanto é 15 ÷ 3?", resposta: "5", opcoes: ["3", "5", "6"] },
+      { pergunta: "Qual é o menor número primo?", resposta: "2", opcoes: ["1", "2", "3"] },
+      { pergunta: "Quanto é 10 + 10?", resposta: "20", opcoes: ["20", "10", "30"] },
+      { pergunta: "Quanto é 7 x 5?", resposta: "35", opcoes: ["30", "35", "40"] },
+      { pergunta: "Quanto é 100 - 25?", resposta: "75", opcoes: ["50", "75", "100"] },
+      { pergunta: "Quanto é 9 x 9?", resposta: "81", opcoes: ["72", "81", "90"] },
+      { pergunta: "Qual planeta é conhecido como o Planeta Vermelho?", resposta: "Marte", opcoes: ["Júpiter", "Saturno", "Marte"] },
+      { pergunta: "Qual o maior planeta do sistema solar?", resposta: "Júpiter", opcoes: ["Saturno", "Terra", "Júpiter"] },
+      { pergunta: "O que usamos para respirar?", resposta: "Pulmões", opcoes: ["Estômago", "Pulmões", "Rins"] },
+      { pergunta: "Qual o nome do nosso satélite natural?", resposta: "Lua", opcoes: ["Sol", "Estrela", "Lua"] },
+      { pergunta: "Qual é o maior órgão do corpo humano?", resposta: "Pele", opcoes: ["Fígado", "Pele", "Coração"] },
+      { pergunta: "Qual gás é essencial para a respiração?", resposta: "Oxigênio", opcoes: ["Hidrogênio", "Oxigênio", "Gás carbônico"] },
+      { pergunta: "Quantos sentidos temos?", resposta: "5", opcoes: ["4", "5", "6"] },
+      { pergunta: "Qual parte do corpo usamos para ouvir?", resposta: "Ouvidos", opcoes: ["Olhos", "Ouvidos", "Boca"] },
+      { pergunta: "Qual o animal mais rápido do mundo?", resposta: "Guepardo", opcoes: ["Leão", "Guepardo", "Águia"] },
+      { pergunta: "Qual é o estado da água em forma de vapor?", resposta: "Gasoso", opcoes: ["Líquido", "Gasoso", "Sólido"] },
+      { pergunta: "Qual é a capital do Brasil?", resposta: "Brasília", opcoes: ["Rio de Janeiro", "São Paulo", "Brasília"] },
+      { pergunta: "Quem descobriu o Brasil?", resposta: "Pedro Álvares Cabral", opcoes: ["Tiradentes", "Dom Pedro", "Pedro Álvares Cabral"] },
+      { pergunta: "Em que continente está o Egito?", resposta: "África", opcoes: ["Ásia", "Europa", "África"] },
+      { pergunta: "Qual país tem a maior população do mundo?", resposta: "China", opcoes: ["Índia", "EUA", "China"] },
+      { pergunta: "Qual é o menor continente?", resposta: "Oceania", opcoes: ["África", "Ásia", "Oceania"] },
+      { pergunta: "Qual é o rio mais extenso do mundo?", resposta: "Amazonas", opcoes: ["Nilo", "Tigre", "Amazonas"] },
+      { pergunta: "Qual é o ponto mais alto do mundo?", resposta: "Monte Everest", opcoes: ["K2", "Pico da Neblina", "Monte Everest"] },
+      { pergunta: "Qual era o nome do Brasil antes?", resposta: "Terra de Santa Cruz", opcoes: ["Terra Brasilis", "Ilha de Vera Cruz", "Terra de Santa Cruz"] },
+      { pergunta: "Quem foi o primeiro presidente do Brasil?", resposta: "Deodoro da Fonseca", opcoes: ["Getúlio Vargas", "Dom Pedro II", "Deodoro da Fonseca"] },
+      { pergunta: "Qual é o oceano entre África e América?", resposta: "Atlântico", opcoes: ["Índico", "Pacífico", "Atlântico"] },
+      { pergunta: "Qual é o plural de 'pão'?", resposta: "Pães", opcoes: ["Pãos", "Pãezes", "Pães"] },
+      { pergunta: "Qual é o antônimo de 'claro'?", resposta: "Escuro", opcoes: ["Luz", "Escuro", "Branco"] },
+      { pergunta: "Qual é a forma correta: 'caza' ou 'casa'?", resposta: "Casa", opcoes: ["Caza", "Kasa", "Casa"] },
+      { pergunta: "Complete: A ____ está no céu.", resposta: "Lua", opcoes: ["Chuva", "Lua", "Árvore"] },
+      { pergunta: "Como se escreve 'chuchu' corretamente?", resposta: "Chuchu", opcoes: ["Xuxu", "Chuxu", "Chuchu"] },
+      { pergunta: "Qual dessas palavras é um verbo?", resposta: "Correr", opcoes: ["Rápido", "Correr", "Bonito"] },
+      { pergunta: "Qual é o aumentativo de 'casa'?", resposta: "Casarão", opcoes: ["Casebre", "Casinha", "Casarão"] },
+      { pergunta: "Qual é o feminino de 'professor'?", resposta: "Professora", opcoes: ["Professora", "Mestre", "Professário"] },
+      { pergunta: "Qual dessas palavras tem acento?", resposta: "Café", opcoes: ["Papel", "Café", "Tigre"] },
+      { pergunta: "Qual é o sinônimo de 'alegre'?", resposta: "Feliz", opcoes: ["Triste", "Bravo", "Feliz"] },
+      { pergunta: "Quantos dias tem uma semana?", resposta: "7", opcoes: ["5", "6", "7"] },
+      { pergunta: "Quantos meses têm 28 dias?", resposta: "Todos", opcoes: ["Um", "Fevereiro", "Todos"] },
+      { pergunta: "Qual animal mia?", resposta: "Gato", opcoes: ["Cachorro", "Gato", "Pato"] },
+      { pergunta: "Qual é o símbolo da sabedoria?", resposta: "Coruja", opcoes: ["Leão", "Coruja", "Cavalo"] },
+      { pergunta: "O que usamos para medir temperatura?", resposta: "Termômetro", opcoes: ["Bússola", "Termômetro", "Régua"] },
+      { pergunta: "O que é usado para escrever no quadro?", resposta: "Giz", opcoes: ["Caneta", "Lápis", "Giz"] },
+      { pergunta: "Qual fruta tem nome de cor?", resposta: "Laranja", opcoes: ["Maçã", "Uva", "Laranja"] },
+      { pergunta: "Qual é a cor do céu em um dia claro?", resposta: "Azul", opcoes: ["Verde", "Branco", "Azul"] },
+      { pergunta: "Onde vivem os peixes?", resposta: "Na água", opcoes: ["No ar", "Na terra", "Na água"] },
+      { pergunta: "Qual é o contrário de quente?", resposta: "Frio", opcoes: ["Morno", "Gelado", "Frio"] }
+    ];
+
+    const totalSquares = 20;
+    let currentPlayer = 1;
+    let positions = { 1: 0, 2: 0 };
+
+    function criarTabuleiro() {
+      for (let i = 0; i < totalSquares; i++) {
+        const square = document.createElement("div");
+        square.className = "square";
+        square.id = "square-" + i;
+        board.appendChild(square);
+      }
+    }
+
+    function atualizarTabuleiro() {
+      document.querySelectorAll(".square").forEach(sq => sq.innerHTML = "");
+      for (const player in positions) {
+        const pos = positions[player];
+        const piece = document.createElement("div");
+        piece.className = "player" + player;
+        document.getElementById("square-" + pos).appendChild(piece);
+      }
+    }
+
+    function exibirPergunta(perguntaObj) {
+      questionBox.innerHTML = "";
+      const pergunta = document.createElement("p");
+      pergunta.textContent = perguntaObj.pergunta;
+      questionBox.appendChild(pergunta);
+
+      const opcoesEmbaralhadas = perguntaObj.opcoes
+        .map(opcao => ({
+          texto: opcao,
+          correta: opcao === perguntaObj.resposta
+        }))
+        .sort(() => Math.random() - 0.5);
+
+      opcoesEmbaralhadas.forEach(opcao => {
+        const botao = document.createElement("button");
+        botao.textContent = opcao.texto;
+        botao.onclick = () => verificarResposta(opcao.correta);
+        questionBox.appendChild(botao);
+      });
+    }
+
+    function verificarResposta(correta) {
+      if (correta) {
+        positions[currentPlayer] = Math.min(positions[currentPlayer] + 1, totalSquares - 1);
+        somAcerto.play();
+      } else {
+        positions[currentPlayer] = Math.max(positions[currentPlayer] - 2, 0);
+        somErro.play();
+      }
+
+      atualizarTabuleiro();
+      questionBox.innerHTML = "";
+
+      if (positions[currentPlayer] >= totalSquares - 1) {
+        turnInfo.textContent = "Jogador " + currentPlayer + " venceu!";
+      } else {
+        currentPlayer = currentPlayer === 1 ? 2 : 1;
+        turnInfo.textContent = "Vez do Jogador " + currentPlayer;
+      }
+    }
+
+    function rollDice() {
+      const perguntaAleatoria = questions[Math.floor(Math.random() * questions.length)];
+      exibirPergunta(perguntaAleatoria);
+    }
+
+    function reiniciarJogo() {
+      positions = { 1: 0, 2: 0 };
+      currentPlayer = 1;
+      atualizarTabuleiro();
+      questionBox.innerHTML = "";
+      turnInfo.textContent = "Clique para jogar 🎲";
+    }
+
+    criarTabuleiro();
+    atualizarTabuleiro();
+    turnInfo.textContent = "Vez do Jogador " + currentPlayer;
+  </script>
+</body>
+</html>
