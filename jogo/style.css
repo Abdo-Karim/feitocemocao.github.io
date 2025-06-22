@@ -1,0 +1,32 @@
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f0f0;
+}
+#board {
+    display: grid;
+    grid-template-columns: repeat(6, 50px);
+    gap: 5px;
+    justify-content: center;
+    margin: 20px;
+}
+.square {
+    width: 50px;
+    height: 50px;
+    background-color: #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+.square.active.player1 {
+    background-color: lightblue;
+}
+.square.active.player2 {
+    background-color: lightgreen;
+}
+button {
+    margin-top: 10px;
+    padding: 10px 20px;
+}
