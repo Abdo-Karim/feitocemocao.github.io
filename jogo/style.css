@@ -1,0 +1,38 @@
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f0f8;
+    padding: 20px;
+}
+h1 {
+    color: #333;
+}
+#board {
+    display: flex;
+    flex-wrap: wrap;
+    width: 300px;
+    margin: 20px auto;
+}
+.square {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.square.player1 {
+    background-color: #add8e6;
+}
+.square.player2 {
+    background-color: #90ee90;
+}
+#questionBox {
+    margin-top: 20px;
+}
+button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+}
