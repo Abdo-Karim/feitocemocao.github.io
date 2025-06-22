@@ -5,8 +5,6 @@
     <title>Corrida do Saber</title>
     <link rel="stylesheet" href="style.css">
 </head>
-    <audio id="somAcerto" src="acerto.mp3" preload="auto"></audio>
-<audio id="somErro" src="erro.mp3" preload="auto"></audio>
 <body>
     <h1>Corrida do Saber</h1>
     <div id="turnInfo">Clique para jogar 🎲</div>
@@ -15,10 +13,12 @@
     <button onclick="rollDice()">Jogar dado 🎲</button>
     <button onclick="reiniciarJogo()">Reiniciar</button>
 
-    <audio id="somAcerto" src="acerto.mp3"></audio>
-    <audio id="somErro" src="erro.mp3"></audio>
+    <!-- Sons (apenas uma vez aqui) -->
+    <audio id="somAcerto" src="acerto.mp3" preload="auto"></audio>
+    <audio id="somErro" src="erro.mp3" preload="auto"></audio>
 
     <script src="perguntas.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
+
