@@ -1,0 +1,22 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Corrida do Saber</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Corrida do Saber</h1>
+    <div id="turnInfo">Jogador 1, sua vez</div>
+    <div id="diceResult"></div>
+    <div id="board"></div>
+    <div id="questionBox"></div>
+    <button onclick="rollDice()">Jogar dado 🎲</button>
+    <button onclick="restartGame()">Reiniciar Jogo 🔄</button>
+    <audio id="correctSound" src="correct.mp3" preload="auto"></audio>
+    <audio id="wrongSound" src="wrong.mp3" preload="auto"></audio>
+    <script src="perguntas.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

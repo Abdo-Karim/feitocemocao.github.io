@@ -1,0 +1,33 @@
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+#board {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 600px;
+    margin: 20px auto;
+}
+.square {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2px;
+    background-color: white;
+}
+.active {
+    background-color: yellow;
+}
+#questionBox {
+    margin: 20px;
+}
+button {
+    margin: 10px;
+    padding: 10px 20px;
+}
